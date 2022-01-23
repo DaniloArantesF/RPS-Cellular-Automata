@@ -64,3 +64,7 @@ body {
   grid-template-columns: 1fr .5fr .5fr;
   align-items: center;
 }
+
+.fps_controls {
+  display: flex;
+}

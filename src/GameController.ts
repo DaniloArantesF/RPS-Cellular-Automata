@@ -11,8 +11,9 @@ const blueBtn = document.getElementById('blue');
 const startBtn = document.getElementById('start');
 const stepBtn = document.getElementById('step');
 
-const fps = 50;
-const fpsInterval = 1000 / fps; // Get interval in milliseconds
+const fpsSlider = document.getElementById('fps_slider') as HTMLInputElement;
+let fps = Number(fpsSlider.value) ?? 20;
+let fpsInterval = 1000 / fps; // Get interval in milliseconds
 
 export enum STATUS {
   PAUSED,
@@ -72,6 +73,11 @@ class GameController {
     blueBtn?.addEventListener('click', () => this.switchMode(states.SCISSORS));
     startBtn?.addEventListener('click', this.handleStartClick);
     stepBtn?.addEventListener('click', this.handleStep);
+
+    fpsSlider.addEventListener('input', (event) => {
+      const slider = event.target as HTMLInputElement;
+      this.updateFPS(Number(slider.value));
+    });
 
     // Create board and start render loop
     this.setUpBoard();
@@ -296,6 +302,13 @@ class GameController {
       ctx.stroke();
     }
   };
+
+  private updateFPS = (newValue:number) => {
+    fps = newValue;
+    fpsInterval = 1000 / fps;
+    const fpsLabel = document.getElementById('fps_display') as HTMLLabelElement;
+    fpsLabel.innerHTML = `${newValue}`;
+  }
 }
 
 export default GameController;
