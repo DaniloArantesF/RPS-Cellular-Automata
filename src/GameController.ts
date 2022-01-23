@@ -11,7 +11,7 @@ const blueBtn = document.getElementById('blue');
 const startBtn = document.getElementById('start');
 const stepBtn = document.getElementById('step');
 
-const fps = 15;
+const fps = 50;
 const fpsInterval = 1000 / fps; // Get interval in milliseconds
 
 export enum STATUS {
@@ -34,7 +34,7 @@ class GameController {
   mode: string;
   status: STATUS;
   frame: number;
-  animationInterval: number;
+  lastFrame: number;
 
   constructor() {
     // Constants
@@ -51,7 +51,7 @@ class GameController {
     this.mode = states.BLANK; // Color to be used
     this.status = STATUS.PAUSED;
     this.frame = -1;
-    this.animationInterval = -1;
+    this.lastFrame = 0;
 
     // Canvas Mouse Events
     canvas.addEventListener('click', (event) => {
@@ -103,11 +103,9 @@ class GameController {
     if (!btnLabel) return;
     if (this.status === STATUS.PAUSED) {
       btnLabel.innerText = 'Pause';
-      this.animationInterval = setInterval(this.updateBoard, fpsInterval);
       this.status = STATUS.RUNNING;
     } else {
-      btnLabel.innerText = 'Run';
-      clearInterval(this.animationInterval);
+      btnLabel.innerText = 'Start';
       this.status = STATUS.PAUSED;
     }
   };
@@ -200,6 +198,10 @@ class GameController {
   };
 
   public render = (time: number) => {
+    if (this.status === STATUS.RUNNING && time - this.lastFrame >= fpsInterval) {
+      this.lastFrame = time;
+      this.updateBoard();
+    }
     this.drawBoard();
     if (GRID) this.drawGrid();
     requestAnimationFrame(this.render);
