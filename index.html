@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <link rel="icon" type="image/svg+xml" href="favicon.svg" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RockPaperRole</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="controls">
+        <div class="color_selectors">
+          <button id="red" class="color_selector" />
+          <button id="green" class="color_selector" />
+          <button id="blue" class="color_selector" />
+        </div>
+        <button id="step" class="btn">
+          <h2>Step</h2>
+        </button>
+        <button id="start" class="btn">
+          <h2 id="btn-label">Run</h2>
+        </button>
+      </div>
+      <canvas id="canvas"></canvas>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

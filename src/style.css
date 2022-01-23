@@ -1,0 +1,66 @@
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  background: #121212;
+}
+
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#canvas {
+  width: 700px;
+  height: 500px;
+  margin: 0 auto;
+}
+
+.color_selectors {
+  display: flex;
+}
+
+.color_selector {
+  width: 50px;
+  height: 50px;
+  border: none;
+  margin: 1em;
+}
+
+.btn {
+  padding: 1em 2em;
+  border: none;
+  height: fit-content;
+  width: fit-content;
+  margin-left: auto;
+}
+
+#red {
+  background-color: red;
+}
+#green {
+  background-color: green;
+}
+#blue {
+  background-color: blue;
+}
+
+.controls {
+  display: grid;
+  width: 700px;
+  grid-template-columns: 1fr .5fr .5fr;
+  align-items: center;
+}
