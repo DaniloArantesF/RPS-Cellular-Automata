@@ -24,8 +24,6 @@ body {
 }
 
 #canvas {
-  width: 700px;
-  height: 500px;
   margin: 0 auto;
 }
 
@@ -61,10 +59,25 @@ body {
 .controls {
   display: grid;
   width: 700px;
-  grid-template-columns: 1fr .5fr .5fr;
+  grid-template-columns: 1fr repeat(3, .5fr);
   align-items: center;
+  justify-content: center;
 }
 
-.fps_controls {
-  display: flex;
+.board_controls, .fps_controls {
+  width: 700px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 200px .5fr;
+  gap: .5em;
+  user-select: none;
+  padding: 1em;
 }
+.slider {
+  width: 200px;
+}
+
+.fps_display, .size_display {
+  margin-right: .5em;
+}
+

@@ -2,26 +2,39 @@ import Cell from './Cell';
 import { states } from './Cell';
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d');
-canvas.width = 700;
-canvas.height = 500;
+
+canvas.width = .7 * window.innerHeight;
+canvas.height = .7 * window.innerHeight;
+
 const redBtn = document.getElementById('red');
 const greenBtn = document.getElementById('green');
 const blueBtn = document.getElementById('blue');
 
 const startBtn = document.getElementById('start');
 const stepBtn = document.getElementById('step');
-
+const resetBtn = document.getElementById('reset');
 const fpsSlider = document.getElementById('fps_slider') as HTMLInputElement;
-let fps = Number(fpsSlider.value) ?? 20;
+let fps = Number(fpsSlider.value) ?? 60;
 let fpsInterval = 1000 / fps; // Get interval in milliseconds
+
+let sizeSlider = document.getElementById('size_slider') as HTMLInputElement;
+let boardSize = Number(sizeSlider.value);
+
+const gridCheckbox = document.getElementById('grid') as HTMLInputElement;
+let useGrid = gridCheckbox.checked;
+
+const sizeLabel = document.getElementById('size_display') as HTMLLabelElement;
+sizeLabel.innerHTML = `${boardSize * boardSize} cells`;
+
+const fpsLabel = document.getElementById('fps_display') as HTMLLabelElement;
+fpsLabel.innerHTML = `${fps} fps`;
 
 export enum STATUS {
   PAUSED,
   RUNNING,
 }
 
-const GRID = true;
-const MOUSE_ALWAYS_ON = true;
+const MOUSE_ALWAYS_ON = true; // whether user can interact with animation running
 
 class GameController {
   canvasWidth: number;
@@ -41,8 +54,8 @@ class GameController {
     // Constants
     this.canvasWidth = canvas.width;
     this.canvasHeight = canvas.height;
-    this.columnCount = 30;
-    this.rowCount = 30;
+    this.columnCount = boardSize;
+    this.rowCount = boardSize;
     this.cellWidth = this.canvasWidth / this.columnCount;
     this.cellHeight = this.canvasHeight / this.rowCount;
 
@@ -73,12 +86,22 @@ class GameController {
     blueBtn?.addEventListener('click', () => this.switchMode(states.SCISSORS));
     startBtn?.addEventListener('click', this.handleStartClick);
     stepBtn?.addEventListener('click', this.handleStep);
+    resetBtn?.addEventListener('click', this.resetGame);
 
     fpsSlider.addEventListener('input', (event) => {
       const slider = event.target as HTMLInputElement;
       this.updateFPS(Number(slider.value));
     });
 
+    sizeSlider.addEventListener('input', (event) => {
+      const slider = event.target as HTMLInputElement;
+      this.updateBoardSize(Number(slider.value));
+    })
+
+    gridCheckbox.addEventListener('input', (event) => {
+      const checkbox = event.target as HTMLInputElement;
+      useGrid = checkbox.checked;
+    });
     // Create board and start render loop
     this.setUpBoard();
     this.render(0);
@@ -105,14 +128,10 @@ class GameController {
   };
 
   private handleStartClick = () => {
-    const btnLabel = document.getElementById('btn-label');
-    if (!btnLabel) return;
     if (this.status === STATUS.PAUSED) {
-      btnLabel.innerText = 'Pause';
-      this.status = STATUS.RUNNING;
+      this.startGame();
     } else {
-      btnLabel.innerText = 'Start';
-      this.status = STATUS.PAUSED;
+      this.pauseGame();
     }
   };
 
@@ -209,7 +228,7 @@ class GameController {
       this.updateBoard();
     }
     this.drawBoard();
-    if (GRID) this.drawGrid();
+    if (useGrid) this.drawGrid();
     requestAnimationFrame(this.render);
   };
 
@@ -287,27 +306,64 @@ class GameController {
   };
 
   private drawGrid = () => {
-    if (!ctx || !GRID) return;
+    if (!ctx || !useGrid) return;
     for (let y = this.cellHeight; y < this.canvasHeight; y += this.cellHeight) {
       ctx.beginPath();
       ctx.moveTo(0, y);
       ctx.lineTo(this.canvasWidth, y);
+      ctx.strokeStyle = '#121212';
       ctx.stroke();
     }
     for (let x = this.cellWidth; x < this.canvasWidth; x += this.cellWidth) {
       ctx.beginPath();
       ctx.moveTo(x, 0);
       ctx.lineTo(x, this.canvasHeight);
-      ctx.strokeStyle = '#aaaaaa';
+      ctx.strokeStyle = '#121212';
       ctx.stroke();
     }
   };
+
+  private updateBoardSize = (newSize: number) => {
+    boardSize = newSize;
+    this.pauseGame();
+    this.columnCount = newSize;
+    this.rowCount = newSize;
+    this.columnCount = newSize;
+    this.rowCount = newSize;
+    this.cellWidth = this.canvasWidth / this.columnCount;
+    this.cellHeight = this.canvasHeight / this.rowCount;
+    const sizeLabel = document.getElementById('size_display') as HTMLLabelElement;
+    sizeLabel.innerHTML = `${newSize * newSize} cells`;
+    this.resetGame()
+  }
 
   private updateFPS = (newValue:number) => {
     fps = newValue;
     fpsInterval = 1000 / fps;
     const fpsLabel = document.getElementById('fps_display') as HTMLLabelElement;
-    fpsLabel.innerHTML = `${newValue}`;
+    fpsLabel.innerHTML = `${newValue} fps`;
+  }
+
+  private resetGame = () => {
+    this.pauseGame();
+    this.frame = -1;
+    this.lastFrame = 0;
+    this.cells = [];
+    this.setUpBoard();
+  }
+
+  private startGame = () => {
+    const btnLabel = document.getElementById('btn-label');
+    if (!btnLabel) return;
+    btnLabel.innerText = 'Pause';
+    this.status = STATUS.RUNNING;
+  }
+
+  private pauseGame = () => {
+    const btnLabel = document.getElementById('btn-label');
+    if (!btnLabel) return;
+    this.status = STATUS.PAUSED;
+    btnLabel.innerText = 'Start';
   }
 }
 

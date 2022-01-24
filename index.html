@@ -9,10 +9,19 @@
   <body>
     <div id="app">
       <div class="fps_controls">
-        <input type="range" min="1" max="60" value="20" class="slider" id="fps_slider">
+        <input type="range" min="1" max="60" value="60" class="slider" id="fps_slider">
         <label id="fps_display">
-          20
         </label>
+      </div>
+      <div class="board_controls">
+          <input type="range" min="5" max="200" value="100" class="slider" id="size_slider">
+          <label id="size_display">
+          </label>
+
+          <div>
+            <input type="checkbox" id="grid" name="grid">
+            <label for="grid">Grid</label>
+          </div>
       </div>
       <div class="controls">
         <div class="color_selectors">
@@ -20,6 +29,9 @@
           <button id="green" class="color_selector" />
           <button id="blue" class="color_selector" />
         </div>
+        <button id="reset" class="btn">
+          <h2>Reset</h2>
+        </button>
         <button id="step" class="btn">
           <h2>Step</h2>
         </button>
