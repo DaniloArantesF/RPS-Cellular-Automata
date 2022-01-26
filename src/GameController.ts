@@ -18,14 +18,17 @@ let fps = Number(fpsSlider.value) ?? 60;
 let fpsInterval = 1000 / fps; // Get interval in milliseconds
 
 let rowSelector = document.getElementById('rows') as HTMLInputElement;
+rowSelector.value = `${50}`;
 let collumnSelector = document.getElementById('cols') as HTMLInputElement;
-let boardSize = 2; //Number(sizeSlider.value);
+collumnSelector.value = `${50}`;
+
+let boardSize = Number(rowSelector.value) * Number(collumnSelector.value);
 
 const gridCheckbox = document.getElementById('grid') as HTMLInputElement;
 let useGrid = gridCheckbox.checked;
 
 const sizeLabel = document.getElementById('size_display') as HTMLLabelElement;
-sizeLabel.innerHTML = `${boardSize * boardSize} cells`;
+sizeLabel.innerHTML = `${boardSize} cells`;
 
 const fpsLabel = document.getElementById('fps_display') as HTMLLabelElement;
 fpsLabel.innerHTML = `${fps} fps`;
@@ -53,10 +56,11 @@ class GameController {
 
   constructor() {
     // Constants
+    console.log(rowSelector.value)
     this.canvasWidth = canvas.width;
     this.canvasHeight = canvas.height;
-    this.columnCount = boardSize;
-    this.rowCount = boardSize;
+    this.columnCount = Number(collumnSelector.value) ?? 50;
+    this.rowCount = Number(rowSelector.value) ?? 50;
     this.cellWidth = this.canvasWidth / this.columnCount;
     this.cellHeight = this.canvasHeight / this.rowCount;
 
