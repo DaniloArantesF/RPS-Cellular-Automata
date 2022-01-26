@@ -19,18 +19,16 @@ export const states = {
 // }
 
 class Cell {
-  state: string;
   x: number;
   y: number;
+  state: string;
   generation: number;
-  color: string;
 
   constructor(x: number, y: number, generation: number, state ?: string, ) {
-    this.state = state ?? states.BLANK;
     this.x = x;
     this.y = y;
+    this.state = state ?? states.BLANK;
     this.generation = generation;
-    this.color = state ?? states.BLANK;
   }
 
   public setGeneration(generation: number) {

@@ -3,8 +3,8 @@ import { states } from './Cell';
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d');
 
-canvas.width = .7 * window.innerHeight;
-canvas.height = .7 * window.innerHeight;
+canvas.width = 0.7 * window.innerHeight;
+canvas.height = 0.7 * window.innerHeight;
 
 const redBtn = document.getElementById('red');
 const greenBtn = document.getElementById('green');
@@ -17,8 +17,9 @@ const fpsSlider = document.getElementById('fps_slider') as HTMLInputElement;
 let fps = Number(fpsSlider.value) ?? 60;
 let fpsInterval = 1000 / fps; // Get interval in milliseconds
 
-let sizeSlider = document.getElementById('size_slider') as HTMLInputElement;
-let boardSize = Number(sizeSlider.value);
+let rowSelector = document.getElementById('rows') as HTMLInputElement;
+let collumnSelector = document.getElementById('cols') as HTMLInputElement;
+let boardSize = 2; //Number(sizeSlider.value);
 
 const gridCheckbox = document.getElementById('grid') as HTMLInputElement;
 let useGrid = gridCheckbox.checked;
@@ -93,10 +94,15 @@ class GameController {
       this.updateFPS(Number(slider.value));
     });
 
-    sizeSlider.addEventListener('input', (event) => {
-      const slider = event.target as HTMLInputElement;
-      this.updateBoardSize(Number(slider.value));
-    })
+    rowSelector.addEventListener('input', (event) => {
+      const selector = event.target as HTMLInputElement;
+      this.setRowCount(Number(selector.value))
+    });
+
+    collumnSelector.addEventListener('input', (event) => {
+      const selector = event.target as HTMLInputElement;
+      this.setColCount(Number(selector.value))
+    });
 
     gridCheckbox.addEventListener('input', (event) => {
       const checkbox = event.target as HTMLInputElement;
@@ -223,7 +229,10 @@ class GameController {
   };
 
   public render = (time: number) => {
-    if (this.status === STATUS.RUNNING && time - this.lastFrame >= fpsInterval) {
+    if (
+      this.status === STATUS.RUNNING &&
+      time - this.lastFrame >= fpsInterval
+    ) {
       this.lastFrame = time;
       this.updateBoard();
     }
@@ -323,26 +332,38 @@ class GameController {
     }
   };
 
-  private updateBoardSize = (newSize: number) => {
-    boardSize = newSize;
+  private setRowCount = (newValue: number) => {
     this.pauseGame();
-    this.columnCount = newSize;
-    this.rowCount = newSize;
-    this.columnCount = newSize;
-    this.rowCount = newSize;
+    boardSize = this.columnCount * newValue;
+    this.rowCount = newValue;
     this.cellWidth = this.canvasWidth / this.columnCount;
     this.cellHeight = this.canvasHeight / this.rowCount;
-    const sizeLabel = document.getElementById('size_display') as HTMLLabelElement;
-    sizeLabel.innerHTML = `${newSize * newSize} cells`;
-    this.resetGame()
-  }
+    const sizeLabel = document.getElementById(
+      'size_display'
+    ) as HTMLLabelElement;
+    sizeLabel.innerHTML = `${boardSize} cells`;
+    this.resetGame();
+  };
 
-  private updateFPS = (newValue:number) => {
+  private setColCount = (newValue: number) => {
+    this.pauseGame();
+    boardSize = this.rowCount * newValue;
+    this.columnCount = newValue;
+    this.cellWidth = this.canvasWidth / this.columnCount;
+    this.cellHeight = this.canvasHeight / this.rowCount;
+    const sizeLabel = document.getElementById(
+      'size_display'
+    ) as HTMLLabelElement;
+    sizeLabel.innerHTML = `${boardSize} cells`;
+    this.resetGame();
+  };
+
+  private updateFPS = (newValue: number) => {
     fps = newValue;
     fpsInterval = 1000 / fps;
     const fpsLabel = document.getElementById('fps_display') as HTMLLabelElement;
     fpsLabel.innerHTML = `${newValue} fps`;
-  }
+  };
 
   private resetGame = () => {
     this.pauseGame();
@@ -350,21 +371,21 @@ class GameController {
     this.lastFrame = 0;
     this.cells = [];
     this.setUpBoard();
-  }
+  };
 
   private startGame = () => {
     const btnLabel = document.getElementById('btn-label');
     if (!btnLabel) return;
     btnLabel.innerText = 'Pause';
     this.status = STATUS.RUNNING;
-  }
+  };
 
   private pauseGame = () => {
     const btnLabel = document.getElementById('btn-label');
     if (!btnLabel) return;
     this.status = STATUS.PAUSED;
     btnLabel.innerText = 'Start';
-  }
+  };
 }
 
 export default GameController;

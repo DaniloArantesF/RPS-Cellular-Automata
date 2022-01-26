@@ -2,26 +2,33 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- <link rel="icon" type="image/svg+xml" href="favicon.svg" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RockPaperRole</title>
+    <title>RPS Cellular Automata</title>
   </head>
   <body>
     <div id="app">
       <div class="fps_controls">
-        <input type="range" min="1" max="60" value="60" class="slider" id="fps_slider">
-        <label id="fps_display">
-        </label>
+        <input
+          type="range"
+          min="1"
+          max="60"
+          value="60"
+          class="slider"
+          id="fps_slider"
+        />
+        <label id="fps_display"> </label>
       </div>
       <div class="board_controls">
-          <input type="range" min="5" max="200" value="100" class="slider" id="size_slider">
-          <label id="size_display">
-          </label>
+        <input type="number" id="rows" name="rows"
+       min="5" max="200">
+       <input type="number" id="cols" name="collumns"
+       min="5" max="200">
+       <label id="size_display"></label>
 
-          <div>
-            <input type="checkbox" id="grid" name="grid">
-            <label for="grid">Grid</label>
-          </div>
+        <div>
+          <input type="checkbox" id="grid" name="grid" />
+          <label for="grid">Grid</label>
+        </div>
       </div>
       <div class="controls">
         <div class="color_selectors">
